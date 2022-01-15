@@ -19,6 +19,7 @@ var templateContent = map[string]string{
 	"routers":   "package routers\n\nimport (\n\t\"demo/handlers\"\n\t\"github.com/gin-gonic/gin\"\n)\n\nfunc SetDefaultRouter(r *gin.Engine) {\n\t// default Router\n\t// this is a basic router that when you access this project with localhost:xxxx, this router will execute\n\tr.GET(\"/\", handlers.Index)\n\tr.GET(\"/login\", handlers.Login)\n\tr.POST(\"/login\", handlers.Login)\n}\n\nfunc SetGroupedRouter(r *gin.Engine) {\n\t// router group\n\tv1 := r.Group(\"/v1\")\n\t{\n\t\t// imagine group v1 is for all GET requests\n\t\t// this api will handle the request with parameters in path\n\t\t\n\t\t// the URL should be like localhost:8000/v1/hello/Tom/19\n\t\tv1.GET(\"/hello/:name/:age\", handlers.ReturnInfo)\n\t\t// localhost:8000/v1/hello/user?name=Jerry&age=19\n\t\tv1.GET(\"/hello/user\", handlers.URLQueryHandler)\n\t}\n\t\n}\n",
 	"templates": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <title>LoginToGin</title>\n</head>\n<body>\n    <img class=\"dog\" src=\"../static/dog.jpg\" style=\"height: 300px; width: 500px\">\n    <form action=\"http://localhost:8000/login\" method=\"POST\">\n        Username:<input type=\"text\" name=\"username\"> <br/>\n        Password:<input type=\"password\" name=\"password\"> <br/>\n        <input type=\"submit\" value=\"Login\">\n    </form>\n</body>\n</html>",
 	"static":    string(imageFile),
+	"config":    "package config\n\nimport \"fmt\"\n\nconst (\n\tMYSQL_USERNAME = \"admin\"\n\tMYSQL_PASSWORD = \"xxxxx\"\n\tMYSQL_HOST     = \"localhost\"\n\tMYSQL_PORT     = \"3306\"\n\tMYSQL_DATABASE = \"employees\"\n\tMYSQL_TIMEOUT  = \"5s\"\n)\n\nvar MYSQL_DSN = fmt.Sprintf(\"%v:%v@tcp(%v:%v)/%v?charset=utf8&parseTime=True&loc=Local&timeout=%v\",\n\tMYSQL_USERNAME, MYSQL_PASSWORD, MYSQL_HOST, MYSQL_PORT, MYSQL_DATABASE, MYSQL_TIMEOUT)\n\nconst (\n\tMONGO_USERNAME   = \"admin\"\n\tMONGO_PASSWORD   = \"xxxxxxx\"\n\tMONGO_HOST       = \"localhost\"\n\tMONGO_PORT       = \"27017\"\n\tMONGO_DATABASE   = \"users\"\n\tMONGO_COLLECTION = \"user\"\n)\n\nvar MONGODB_URI = fmt.Sprintf(\"mongodb://%v:%v@%v:%v/test?authSource=%v\",\n\tMONGO_USERNAME, MONGO_PASSWORD, MONGO_HOST, MONGO_PORT, MONGO_USERNAME)\n",
 }
 
 func InitProject(modName string) {
@@ -49,6 +50,13 @@ func InstallDependencies() {
 		log.Fatal(err)
 	}
 	log.Println(string(output))
+	getGormCMD = exec.Command("go", "get", "-u", "gorm.io/driver/mysql")
+	output, err = getGormCMD.CombinedOutput()
+	
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println(string(output))
 	
 	// install mongodb driver for this template
 	getMongoDBCMD := exec.Command("go", "get", "-u", "go.mongodb.org/mongo-driver/mongo")
@@ -68,6 +76,7 @@ func CreateDirs() {
 		"templatesDir":   "templates",
 		"handlersDir":    "handlers",
 		"routersDir":     "routers",
+		"configDir":      "config",
 	}
 	
 	for k := range basicSettings {
@@ -99,6 +108,7 @@ func createTemplate(dirName string) {
 		"handlers":  "handlers.go",
 		"routers":   "routers.go",
 		"static":    "dog.jpg",
+		"config":    "db_config.go",
 	}
 	if name, ok := templatesFile[dirName]; ok {
 		err := ioutil.WriteFile(dirName+"/"+name, []byte(templateContent[dirName]), os.ModePerm)

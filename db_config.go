@@ -7,7 +7,7 @@ const (
 	MYSQL_PASSWORD = "xxxxx"
 	MYSQL_HOST     = "localhost"
 	MYSQL_PORT     = "3306"
-	MYSQL_DATABASE = "test"
+	MYSQL_DATABASE = "employees"
 	MYSQL_TIMEOUT  = "5s"
 )
 
@@ -16,11 +16,11 @@ var MYSQL_DSN = fmt.Sprintf("%v:%v@tcp(%v:%v)/%v?charset=utf8&parseTime=True&loc
 
 const (
 	MONGO_USERNAME   = "admin"
-	MONGO_PASSWORD   = "password"
+	MONGO_PASSWORD   = "xxxxxxx"
 	MONGO_HOST       = "localhost"
 	MONGO_PORT       = "27017"
-	MONGO_DATABASE   = "xxxxxx"
-	MONGO_COLLECTION = "xxxxxx"
+	MONGO_DATABASE   = "users"
+	MONGO_COLLECTION = "user"
 )
 
 var MONGODB_URI = fmt.Sprintf("mongodb://%v:%v@%v:%v/test?authSource=%v",

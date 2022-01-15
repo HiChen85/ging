@@ -7,8 +7,8 @@ import (
 )
 
 var RootCMD = &cobra.Command{
-	Use:   "ging_local",
-	Short: "ging_local is to create a gin dev template",
+	Use:   "ging",
+	Short: "ging is to create a gin dev template",
 	Long: "This tool is built for those who are freshmen in gin, it will create a simple template which include " +
 		"handlers, models, routers, templates and static directories. Besides, it will add some basic database connection configuration for users, some " +
 		"simple handler functions and routers.",
@@ -65,8 +65,6 @@ var CreateCMD = &cobra.Command{
 
 func init() {
 	RootCMD.AddCommand(CreateCMD)
-	
-	CreateCMD.Flags().StringP("database", "d", "", "set database. default is mysql. you can set it to mongodb")
 	CreateCMD.Flags().StringP("module", "m", "demo", "give a go modules name for your project")
 }
 

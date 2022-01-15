@@ -25,6 +25,13 @@ jobs:
         with:
           go-version: 1.17
       -
+        name: Build on Windows
+        env:
+          CGO_ENABLED: 0
+          GOOS: windows
+          GOARCH: amd64
+        run: go build
+      -
         name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v2
         with:
